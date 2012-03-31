@@ -18,6 +18,7 @@ has index_path => (
 has index_searcher => (
     builder => '_index_searcher_builder',
     is => 'ro',
+    handles => { hits => 'hits' },
     lazy => 1,);
 
 has language => (
@@ -65,7 +66,7 @@ sub _schema_builder {
     my $schema = Lucy::Plan::Schema->new;
     if ( $self->schema_params ) {
         my $polyanalyzer = Lucy::Analysis::PolyAnalyzer->new(
-            language => 'en',
+            language => $self->language
         );
         my $default_type = Lucy::Plan::FullTextType->new(
             analyzer => $polyanalyzer,
@@ -79,11 +80,6 @@ sub _schema_builder {
     }
 
     return $schema;
-}
-
-sub hits {
-    my ($self, %params) = @_;
-    return $self>index_searcher(%params);
 }
 
 __PACKAGE__->meta->make_immutable;
