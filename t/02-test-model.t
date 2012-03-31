@@ -1,8 +1,8 @@
 use Test::More tests => 6;
 use lib 't/lib';
 
-use_ok('TestApp');
-my $subject = TestApp->model('Lucy');
+use_ok('TestAppWithSchema');
+my $subject = TestAppWithSchema->model('Lucy');
 
 $subject->indexer->add_doc({title=>'foo', desc=>'bar'});
 $subject->indexer->commit;
