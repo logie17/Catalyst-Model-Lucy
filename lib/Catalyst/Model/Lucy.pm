@@ -55,9 +55,9 @@ sub _indexer_builder {
     my $self = shift;
 
     my $indexer = Lucy::Index::Indexer->new(
-        index    => $self->index_path,
-        schema   => $self->schema,
-        create   => $self->create_index,
+        index => $self->index_path,
+        schema => $self->schema,
+        create => $self->create_index,
         truncate => $self->truncate_index,
     );
     return $indexer;
@@ -91,6 +91,101 @@ sub _schema_builder {
     return $schema;
 }
 
+sub version { print __PACKAGE__ . " is $VERSION\n" }
+
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+=head1 NAME
+
+Catalyst::Model::Lucy
+
+=head1 SYNOPSIS
+
+    package MyCatApplication::Model::Lucy;
+    use base qw(Catalyst::Model::Lucy);
+
+    my $other_type = Lucy::Plan::FullTextType->new(
+        analyzer => Lucy::Analysis::PolyAnalyzer->new( language => 'en' )
+    );
+
+    __PACKAGE__->config(
+        index_path     => File::Spec->catfile($FindBin::Bin,'index/path/'),
+        num_wanted     => 20,
+        language       => 'en',
+        create_index   => 1,   # Optional
+        truncate_index => 1,   # Optional
+        schema_params  => [    # Optional schema params
+                              { name => 'title' },   # defaults to Lucy::Plan::FullTextType
+                              { name => 'desc', type => $other_type }
+                          ]
+    );
+
+
+=head1 DESCRIPTION
+
+This is a catalyst model for Apache L<Lucy>. 
+
+=head1 ATTRIBUTES
+
+=head2 create_index( 1|0 )
+
+Sets the create_index flag to either 1 or 0 when initializing
+L<Lucy::Index::Indexer>. Default value is 0.
+
+=head2 index_path( $path )
+
+Specifies the path to the index. The default path is $FindBin::Bin/index.
+
+=head2 index_searcher
+
+This is L<Lucy::Search::IndexSearcher>
+
+=head2 indexer
+
+This is L<Lucy::Index::Indexer>
+
+=head2 language( $lang )
+
+This is the index language, the default value is en.
+
+=head2 num_wanted($num)
+
+This is the number of hits the index_searcher will return. This is for
+pagination.
+
+=head2 schema
+
+Accessor to L<Lucy::Plan::Schema>
+
+=head2 schema_params( $array_ref )
+
+Used when the indexer is initialized. The values of this are used to define
+any custom scheme for index creation. See <Lucy::Plan::Schema>
+
+=head2 truncate_index( 1|0 )
+
+Sets the truncate flag to either 1 or 0 when initializing
+L<Lucy::Index::Indexer>. Default value is 0.
+
+=head1 METHODS
+
+=head1 AUTHOR
+
+Logan Bell L<email:logie@cpan.org>
+
+=head1 SEE ALSO
+
+L<Lucy>, L<Catalyst::Model>
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2012, Logan Bell L<email:logie@cpan.org>
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+=cut
+
+__END__
