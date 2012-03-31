@@ -1,5 +1,5 @@
 package Catalyst::Model::Lucy;
-use Moose;
+use Moo;
 use FindBin;
 use File::Spec;
 use Lucy::Search::IndexSearcher;
