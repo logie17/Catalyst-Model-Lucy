@@ -11,6 +11,10 @@ use namespace::clean;
 extends 'Catalyst::Model';
 # ABSTRACT: A model for Lucy
 
+has create_index => (
+    is => 'rw',
+    default => sub { 0 },);
+
 has index_path => (
     is => 'ro',
     default => sub { return File::Spec->catfile("$FindBin::Bin","index") }, );
@@ -21,10 +25,19 @@ has index_searcher => (
     handles => { hits => 'hits' },
     lazy => 1,);
 
+has indexer => (
+    builder => '_indexer_builder',
+    is => 'ro',
+    lazy => 1,);
+
 has language => (
     is => 'rw',
     required => 1,
     default => sub { return 'en' },);
+
+has num_wanted => (
+    is => 'rw',
+    default => sub { return 10 },);
 
 has schema => (
     builder => '_schema_builder',
@@ -34,22 +47,18 @@ has schema => (
 has schema_params => (
     is => 'ro',);
 
-has indexer => (
-    builder => '_indexer_builder',
-    is => 'ro',
-    lazy => 1,);
-
-has num_wanted => (
+has truncate_index => (
     is => 'rw',
-    default => sub { return 10 },);
+    default => sub { 0 },);
 
 sub _indexer_builder {
     my $self = shift;
+
     my $indexer = Lucy::Index::Indexer->new(
         index    => $self->index_path,
         schema   => $self->schema,
-        create   => 1,
-        truncate => 1,
+        create   => $self->create_index,
+        truncate => $self->truncate_index,
     );
     return $indexer;
 }
