@@ -103,6 +103,7 @@ Catalyst::Model::Lucy
 
 =head1 SYNOPSIS
 
+    # 1. Setup the Model
     package MyCatApplication::Model::Lucy;
     use base qw(Catalyst::Model::Lucy);
 
@@ -121,6 +122,14 @@ Catalyst::Model::Lucy
                               { name => 'desc', type => $other_type }
                           ]
     );
+
+
+    # 2. Use in a controller
+    my $results = $c->model('Lucy')->hits( query => 'foo' );
+    while ( my $hit = $results->next ) {
+        print $hit->{title},"\n";
+    }
+
 
 
 =head1 DESCRIPTION
