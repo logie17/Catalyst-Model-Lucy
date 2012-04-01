@@ -1,5 +1,6 @@
 use Test::More tests => 7;
 use Test::Exception;
+use FindBin;
 use lib 't/lib';
 
 _build_index();
@@ -13,12 +14,11 @@ isa_ok $subject->index_searcher, "Lucy::Search::IndexSearcher", "We have a Lucy 
 like $subject->index_path, qr#t/test_index#, "Correct index path";
 is $subject->num_wanted, 20, "Page size is 20";
 
-my $hits = $subject->hits(query=>'foo');
-
-is $hits->total_hits, 2;
+my $hits = $subject->hits( query=>'foo' );
+is $hits->total_hits, 2, "Should only be 2 hits";
 
 while ( my $hit = $hits->next ) {
-    is $hit->{desc},"bar";
+    is $hit->{desc}, "bar", "Instance of bar found";
 }
 
 
