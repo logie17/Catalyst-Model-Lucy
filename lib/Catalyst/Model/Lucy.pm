@@ -1,4 +1,7 @@
 package Catalyst::Model::Lucy;
+{
+  $Catalyst::Model::Lucy::VERSION = '0.001';
+}
 use Moo;
 use FindBin;
 use File::Spec;
