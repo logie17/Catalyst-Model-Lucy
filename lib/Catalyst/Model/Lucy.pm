@@ -91,8 +91,6 @@ sub _schema_builder {
     return $schema;
 }
 
-sub version { print __PACKAGE__ . " is $VERSION\n" }
-
 __PACKAGE__->meta->make_immutable;
 
 1;
